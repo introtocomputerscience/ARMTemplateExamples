@@ -1,0 +1,88 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "servicePlanName": {
+      "type": "string"
+    },
+    "functionName": {
+      "type": "string"
+    },
+    "storageName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    //App Service Plan
+    {
+      "comments": "Generalized from resource: '/subscriptions/6f66f128-bd21-4c1c-a436-7f5bf79a62e2/resourceGroups/AzureFunctionsExamples/providers/Microsoft.Web/serverfarms/SouthCentralUSPlan'.",
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic",
+        "size": "Y1",
+        "family": "Y",
+        "capacity": 0
+      },
+      "kind": "functionapp",
+      "name": "[parameters('servicePlanName')]",
+      "apiVersion": "2015-08-01",
+      "location": "South Central US",
+      "properties": {
+        "name": "[parameters('servicePlanName')]",
+        "numberOfWorkers": 0
+      },
+      "dependsOn": []
+    },
+    //Storage Account
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_LRS"
+      }
+    },
+    //Function App
+    {
+      "apiVersion": "2016-03-01",
+      "name": "[parameters('functionName')]",
+      "type": "Microsoft.Web/sites",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', parameters('servicePlanName'))]"
+      ],
+      "location": "[parameters('location')]",
+      "kind": "functionapp",
+      "properties": {
+        "name": "[parameters('functionName')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsDashboard",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~1"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "6.5.0"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}
