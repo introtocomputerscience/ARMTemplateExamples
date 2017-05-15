@@ -17,7 +17,6 @@
   },
   "variables": {},
   "resources": [
-    //App Service Plan
     {
       "comments": "Generalized from resource: '/subscriptions/6f66f128-bd21-4c1c-a436-7f5bf79a62e2/resourceGroups/AzureFunctionsExamples/providers/Microsoft.Web/serverfarms/SouthCentralUSPlan'.",
       "type": "Microsoft.Web/serverfarms",
@@ -38,7 +37,6 @@
       },
       "dependsOn": []
     },
-    //Storage Account
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Storage/storageAccounts",
@@ -48,7 +46,6 @@
         "accountType": "Standard_LRS"
       }
     },
-    //Function App
     {
       "apiVersion": "2016-03-01",
       "name": "[parameters('functionName')]",
