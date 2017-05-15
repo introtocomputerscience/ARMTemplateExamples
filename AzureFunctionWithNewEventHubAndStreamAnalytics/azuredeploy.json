@@ -2,6 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "servicePlanName": {
+      "type": "string"
+    },
     "functionName": {
       "type": "string"
     },
@@ -14,6 +17,27 @@
   },
   "variables": {},
   "resources": [
+    //App Service Plan
+    {
+      "comments": "Generalized from resource: '/subscriptions/6f66f128-bd21-4c1c-a436-7f5bf79a62e2/resourceGroups/AzureFunctionsExamples/providers/Microsoft.Web/serverfarms/SouthCentralUSPlan'.",
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic",
+        "size": "Y1",
+        "family": "Y",
+        "capacity": 0
+      },
+      "kind": "functionapp",
+      "name": "[parameters('servicePlanName')]",
+      "apiVersion": "2015-08-01",
+      "location": "South Central US",
+      "properties": {
+        "name": "[parameters('servicePlanName')]",
+        "numberOfWorkers": 0
+      },
+      "dependsOn": []
+    },
     //Storage Account
     {
       "apiVersion": "2015-05-01-preview",

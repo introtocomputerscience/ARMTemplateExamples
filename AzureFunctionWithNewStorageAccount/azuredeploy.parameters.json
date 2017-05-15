@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "servicePlanName": {
-      "value": "servicePlanName"
+      "value": "IntroToCSAppPlan"
     },
     "functionName": {
       "value": "ICSFunctionApp"
     },
     "storageName": {
-      "value": "ICSFunctionAppStorage"
+      "value": "introtocsstorage"
     },
     "location": {
       "value": "South Central US"
