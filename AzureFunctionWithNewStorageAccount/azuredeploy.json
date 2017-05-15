@@ -47,16 +47,18 @@
       }
     },
     {
-      "apiVersion": "2016-03-01",
+      "apiVersion": "2015-08-01",
       "name": "[parameters('functionName')]",
       "type": "Microsoft.Web/sites",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]"
+        "[concat('Microsoft.Web/serverfarms/', parameters('servicePlanName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageName'))]"
       ],
       "location": "[parameters('location')]",
       "kind": "functionapp",
       "properties": {
         "name": "[parameters('functionName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('servicePlanName'))]",
         "siteConfig": {
           "appSettings": [
             {
