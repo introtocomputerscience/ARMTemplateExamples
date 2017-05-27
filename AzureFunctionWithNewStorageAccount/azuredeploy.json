@@ -17,9 +17,7 @@
   },
   "variables": {},
   "resources": [
-    //App Service Plan
     {
-      "comments": "Generalized from resource: '/subscriptions/6f66f128-bd21-4c1c-a436-7f5bf79a62e2/resourceGroups/AzureFunctionsExamples/providers/Microsoft.Web/serverfarms/SouthCentralUSPlan'.",
       "type": "Microsoft.Web/serverfarms",
       "sku": {
         "name": "Y1",
@@ -38,7 +36,6 @@
       },
       "dependsOn": []
     },
-    //Storage Account
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Storage/storageAccounts",
@@ -48,18 +45,19 @@
         "accountType": "Standard_LRS"
       }
     },
-    //Function App
     {
-      "apiVersion": "2016-03-01",
+      "apiVersion": "2015-08-01",
       "name": "[parameters('functionName')]",
       "type": "Microsoft.Web/sites",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]"
+        "[concat('Microsoft.Web/serverfarms/', parameters('servicePlanName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageName'))]"
       ],
       "location": "[parameters('location')]",
       "kind": "functionapp",
       "properties": {
         "name": "[parameters('functionName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('servicePlanName'))]",
         "siteConfig": {
           "appSettings": [
             {
@@ -84,7 +82,7 @@
             },
             {
               "name": "WEBSITE_CONTENTSHARE",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[toLower(parameters('functionName'))]"
             }
           ]
         }
